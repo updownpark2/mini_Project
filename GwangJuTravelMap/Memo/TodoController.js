@@ -1,21 +1,27 @@
-import TodoInputView from "./TodoInputView.js";
+import { TodoOutputView } from "./TodoOutputView.js";
+import { TodoInputView } from "./TodoInputView.js";
 
 export default class TodoController {
-  #todo;
-  getTodo() {
-    TodoInputView((inputValue) => {
-      this.#todo = inputValue;
-      this.saveLocal(this.#todo);
+  #todo = [];
+  #todolist = JSON.parse(localStorage.getItem("todolist"));
+
+  todolist() {
+    this.#paintTodo(this.#todolist);
+    this.#getTodo();
+  }
+
+  #getTodo() {
+    TodoInputView.getTodo((inputValue) => {
+      this.#todo.push(inputValue);
+      this.#saveLocal(this.#todo);
     });
   }
 
-  saveLocal(todo) {
-    const savedTodo = JSON.parse(localStorage.getItem("todolist"));
+  #saveLocal(todo) {
+    localStorage.setItem("todolist", JSON.stringify(todo));
+  }
 
-    if (savedTodo === null) {
-      localStorage.setItem("todolist", JSON.stringify([todo]));
-      return;
-    }
-    localStorage.setItem(`todolist`, JSON.stringify([todo, ...savedTodo]));
+  #paintTodo(todolist) {
+    TodoOutputView.paintTodo(todolist);
   }
 }
