@@ -13,3 +13,7 @@
 6. 삭제 버튼 입력 시 Todolist에서 제거
 
 7. 삭제된 Todolist 보여주기
+
+8. checkBox만들어 checked/Not 판단
+
+9. 체크 시 <s> 태그 삽입
