@@ -1,8 +1,14 @@
 import { TodoOutputView } from "./TodoOutputView.js";
 import { TodoInputView } from "./TodoInputView.js";
+import { TodoModel } from "./TodoModel.js";
 
 export default class TodoController {
   #todo;
+  #todolist = JSON.parse(localStorage.getItem("todolist"));
+
+  #setNewTodolist() {
+    this.#todolist = JSON.parse(localStorage.getItem("todolist"));
+  }
 
   todolist() {
     this.#paintTodo();
@@ -10,19 +16,22 @@ export default class TodoController {
   }
 
   #getTodo() {
-    TodoInputView.getTodo((inputValue) => {
+    TodoInputView.inputSubmit((inputValue) => {
       this.#todo = inputValue;
       this.#saveLocal(this.#todo);
     });
   }
 
   #saveLocal(todo) {
-    const savedTodo = JSON.parse(localStorage.getItem("todolist"));
+    this.#setNewTodolist();
 
-    if (savedTodo !== null) {
-      localStorage.setItem("todolist", JSON.stringify([...savedTodo, todo]));
+    if (this.#todolist !== null) {
+      localStorage.setItem(
+        "todolist",
+        JSON.stringify([...this.#todolist, todo])
+      );
     }
-    if (savedTodo === null) {
+    if (this.#todolist === null) {
       localStorage.setItem("todolist", JSON.stringify([todo]));
     }
 
@@ -30,9 +39,28 @@ export default class TodoController {
   }
 
   #paintTodo() {
-    const savedTodo = JSON.parse(localStorage.getItem("todolist"));
-    if (savedTodo !== null) {
-      TodoOutputView.paintTodo(savedTodo);
+    this.#setNewTodolist();
+
+    if (this.#todolist !== null) {
+      TodoOutputView.paintTodo(this.#todolist);
     }
+
+    this.#getLiId();
+  }
+
+  #getLiId() {
+    TodoInputView.buttonClick((event) => {
+      const LiId = event.target.parentElement.id;
+
+      this.#setNewTodolist();
+      this.#removeTodo(this.#todolist, LiId);
+    });
+  }
+
+  #removeTodo(savedTodo, LiId) {
+    const removedTodo = TodoModel.filterRemove(savedTodo, LiId);
+    localStorage.setItem("todolist", JSON.stringify(removedTodo));
+
+    this.#paintTodo();
   }
 }
