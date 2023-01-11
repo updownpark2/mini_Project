@@ -45,10 +45,11 @@ export default class TodoController {
       TodoOutputView.paintTodo(this.#todolist);
     }
 
-    this.#getLiId();
+    this.#buttonClick();
+    this.#boxCheck();
   }
 
-  #getLiId() {
+  #buttonClick() {
     TodoInputView.buttonClick((event) => {
       const LiId = event.target.parentElement.id;
 
@@ -62,5 +63,13 @@ export default class TodoController {
     localStorage.setItem("todolist", JSON.stringify(removedTodo));
 
     this.#paintTodo();
+  }
+
+  #boxCheck() {
+    TodoInputView.boxCheck((event) => {
+      if (event.target.checked) {
+        console.log("체크됨");
+      }
+    });
   }
 }

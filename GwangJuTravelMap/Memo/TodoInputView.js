@@ -19,4 +19,13 @@ export const TodoInputView = {
       });
     });
   }, // button이 계속 변하는게 문제..
+
+  boxCheck(callback) {
+    const checkbox = document.querySelectorAll(".check");
+    checkbox.forEach((item) => {
+      item.addEventListener("click", (event) => {
+        callback(event);
+      });
+    });
+  },
 };
